@@ -223,9 +223,15 @@ class Visualizer():
         self.plot_data['X'].append(epoch + counter_ratio)
         self.plot_data['Y'].append([losses[k] for k in self.plot_data['legend']])
         try:
+            # The issue is in the X data formatting
+            # Instead of stacking the X values, create an array of the correct shape
+            import numpy as np
+            X = np.column_stack([np.array(self.plot_data['X'])] * len(self.plot_data['legend']))
+            Y = np.array(self.plot_data['Y'])
+            
             self.vis.line(
-                X=np.stack([np.array(self.plot_data['X'])] * len(self.plot_data['legend']), 1),
-                Y=np.array(self.plot_data['Y']),
+                X=X,
+                Y=Y,
                 opts={
                     'title': self.name + ' loss over time',
                     'legend': self.plot_data['legend'],
